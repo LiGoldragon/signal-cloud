@@ -1,8 +1,8 @@
 //! Ordinary Signal contract for the cloud component.
 //!
-//! This crate carries peer-callable provider observation, validation, and
-//! planning records. Owner-only credentials and live mutation live in
-//! `owner-signal-cloud`.
+//! This crate carries peer-callable provider observation and validation
+//! records. Owner-only credentials, plan preparation, and live mutation live
+//! in `owner-signal-cloud`.
 
 use nota_codec::{NotaEnum, NotaRecord, NotaTransparent};
 use rkyv::{Archive, Deserialize as RkyvDeserialize, Serialize as RkyvSerialize};
@@ -199,11 +199,6 @@ pub struct Validation {
 }
 
 #[derive(Archive, RkyvSerialize, RkyvDeserialize, NotaRecord, Debug, Clone, PartialEq, Eq)]
-pub struct PlanRequest {
-    pub desired_state: DesiredState,
-}
-
-#[derive(Archive, RkyvSerialize, RkyvDeserialize, NotaRecord, Debug, Clone, PartialEq, Eq)]
 pub struct Plan {
     pub identifier: PlanIdentifier,
     pub provider: Provider,
@@ -321,12 +316,10 @@ signal_channel! {
     channel Cloud {
         operation Observe(Observation),
         operation Validate(Validation),
-        operation Plan(PlanRequest),
     }
     reply Reply {
         Observed(ObservationResult),
         Validated(ValidationReport),
-        PlanPrepared(Plan),
         RequestUnsupported(RequestUnsupported),
         RequestRejected(RequestRejected),
     }

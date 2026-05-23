@@ -1,9 +1,9 @@
 use nota_codec::{Decoder, Encoder, NotaDecode, NotaEncode};
 use signal_cloud::{
     Capability, CapabilityQuery, DesiredState, DomainName, DomainNameSystemRecord, Observation,
-    Operation, OperationKind, PathTreatment, Plan, PlanIdentifier, PlanRequest, Provider,
+    ObservationResult, Operation, OperationKind, PathTreatment, Plan, PlanIdentifier, Provider,
     RecordKind, RecordValue, RedirectRule, RedirectStatus, Reply, ReplyKind, RequestUnsupported,
-    UniformResourceLocator, UnsupportedReason,
+    UniformResourceLocator, UnsupportedReason, Validation,
 };
 use signal_frame::{
     ExchangeFrame, ExchangeFrameBody, ExchangeIdentifier, ExchangeLane, LaneSequence,
@@ -45,14 +45,14 @@ fn exchange() -> ExchangeIdentifier {
 
 #[test]
 fn operations_are_contract_local_without_sema_roots() {
-    let operation = Operation::Plan(PlanRequest {
+    let operation = Operation::Validate(Validation {
         desired_state: desired_state(),
     });
 
-    assert_eq!(operation.operation_kind(), OperationKind::Plan);
+    assert_eq!(operation.operation_kind(), OperationKind::Validate);
     assert_eq!(
         <Operation as signal_frame::SignalOperationHeads>::HEADS,
-        &["Observe", "Validate", "Plan"]
+        &["Observe", "Validate"]
     );
 }
 
@@ -76,7 +76,7 @@ fn capability_observation_round_trips_through_nota() {
 
 #[test]
 fn request_frame_round_trips_with_generated_operation() {
-    let request = Operation::Plan(PlanRequest {
+    let request = Operation::Validate(Validation {
         desired_state: desired_state(),
     })
     .into_request();
@@ -104,7 +104,7 @@ fn request_frame_round_trips_with_generated_operation() {
 #[test]
 fn unsupported_provider_reply_round_trips_through_nota() {
     let reply = Reply::RequestUnsupported(RequestUnsupported {
-        operation: OperationKind::Plan,
+        operation: OperationKind::Validate,
         provider: Some(Provider::Hetzner),
         capability: Some(Capability::RedirectRules),
         reason: UnsupportedReason::CapabilityNotCompiled,
@@ -119,8 +119,8 @@ fn unsupported_provider_reply_round_trips_through_nota() {
 }
 
 #[test]
-fn plan_reply_round_trips_through_nota() {
-    let reply = Reply::PlanPrepared(Plan {
+fn plan_observation_reply_round_trips_through_nota() {
+    let reply = Reply::Observed(ObservationResult::Plan(Plan {
         identifier: PlanIdentifier::new("plan-one"),
         provider: Provider::Cloudflare,
         zone: DomainName::new("goldragon.criome"),
@@ -130,7 +130,7 @@ fn plan_reply_round_trips_through_nota() {
         redirects_to_create: vec![],
         redirects_to_update: vec![],
         redirect_sources_to_delete: vec![],
-    });
+    }));
 
     let text = encode_to_text(&reply);
     let mut decoder = Decoder::new(&text);
