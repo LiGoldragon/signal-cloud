@@ -2,8 +2,7 @@
 
 `signal-cloud` is the ordinary Signal contract for the `cloud` component.
 It lets peers observe provider capabilities and state, validate desired
-provider-neutral cloud state, and ask the daemon to prepare provider-specific
-plans.
+provider-neutral cloud state, and observe daemon-held plans.
 
 ## Boundary
 
@@ -11,9 +10,9 @@ The contract names cloud-provider concepts without binding the domain model
 to any one provider. Cloudflare, Google Cloud, and Hetzner are provider
 variants; they are not separate operation roots.
 
-The ordinary surface does not apply plans. Applying a plan mutates external
-provider accounts and therefore belongs to `owner-signal-cloud` until
-Criome-mediated authorization is in place.
+The ordinary surface does not prepare or apply plans. Preparing a plan writes
+daemon plan state, and applying a plan mutates external provider accounts; both
+belong to `owner-signal-cloud` until Criome-mediated authorization is in place.
 
 ## Public Operations
 
@@ -50,8 +49,8 @@ new shape moves plan preparation to `owner-signal-cloud` as
 - Provider variants.
 - Capability variants.
 - Provider-neutral domain-name-system records and redirect rules.
-- Desired-state and plan records.
-- Ordinary observation, validation, and planning replies.
+- Desired-state, validation, and observable plan records.
+- Ordinary observation and validation replies.
 - Typed unsupported-provider and rejected-request replies.
 
 ## Does Not Own
