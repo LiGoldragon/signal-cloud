@@ -68,6 +68,7 @@ pub enum Capability {
     Archive, RkyvSerialize, RkyvDeserialize, NotaEnum, Debug, Clone, Copy, PartialEq, Eq, Hash,
 )]
 pub enum CapabilityState {
+    NotBuilt,
     Compiled,
     Configured,
     Authorized,
@@ -281,6 +282,7 @@ pub struct ValidationReport {
     Archive, RkyvSerialize, RkyvDeserialize, NotaEnum, Debug, Clone, Copy, PartialEq, Eq, Hash,
 )]
 pub enum UnsupportedReason {
+    ProviderNotBuilt,
     ProviderNotCompiled,
     ProviderNotConfigured,
     CapabilityNotCompiled,

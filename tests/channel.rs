@@ -1,9 +1,9 @@
 use nota_codec::{Decoder, Encoder, NotaDecode, NotaEncode};
 use signal_cloud::{
-    Capability, CapabilityQuery, DesiredState, DomainName, DomainNameSystemRecord, Observation,
-    ObservationResult, Operation, OperationKind, PathTreatment, Plan, PlanIdentifier, Provider,
-    RecordKind, RecordValue, RedirectRule, RedirectStatus, Reply, ReplyKind, RequestUnsupported,
-    UniformResourceLocator, UnsupportedReason, Validation,
+    Capability, CapabilityQuery, CapabilityState, DesiredState, DomainName, DomainNameSystemRecord,
+    Observation, ObservationResult, Operation, OperationKind, PathTreatment, Plan, PlanIdentifier,
+    Provider, RecordKind, RecordValue, RedirectRule, RedirectStatus, Reply, ReplyKind,
+    RequestUnsupported, UniformResourceLocator, UnsupportedReason, Validation,
 };
 use signal_frame::{
     ExchangeFrame, ExchangeFrameBody, ExchangeIdentifier, ExchangeLane, LaneSequence,
@@ -107,7 +107,7 @@ fn unsupported_provider_reply_round_trips_through_nota() {
         operation: OperationKind::Validate,
         provider: Some(Provider::Hetzner),
         capability: Some(Capability::RedirectRules),
-        reason: UnsupportedReason::CapabilityNotCompiled,
+        reason: UnsupportedReason::ProviderNotBuilt,
     });
 
     assert_eq!(reply.kind(), ReplyKind::RequestUnsupported);
@@ -116,6 +116,18 @@ fn unsupported_provider_reply_round_trips_through_nota() {
     let mut decoder = Decoder::new(&text);
     let decoded = Reply::decode(&mut decoder).expect("decode");
     assert_eq!(decoded, reply);
+}
+
+#[test]
+fn not_built_capability_state_round_trips_through_nota() {
+    let state = CapabilityState::NotBuilt;
+
+    let text = encode_to_text(&state);
+    assert_eq!(text, "NotBuilt");
+
+    let mut decoder = Decoder::new(&text);
+    let decoded = CapabilityState::decode(&mut decoder).expect("decode");
+    assert_eq!(decoded, state);
 }
 
 #[test]
