@@ -104,7 +104,6 @@ fn request_frame_round_trips_with_generated_operation() {
 #[test]
 fn unsupported_provider_reply_round_trips_through_nota() {
     let reply = Reply::RequestUnsupported(RequestUnsupported {
-        operation: OperationKind::Validate,
         provider: Some(Provider::Hetzner),
         capability: Some(Capability::RedirectRules),
         reason: UnsupportedReason::ProviderNotBuilt,

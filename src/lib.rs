@@ -85,6 +85,16 @@ pub enum RecordKind {
     CanonicalName,
     Text,
     MailExchange,
+    NameServer,
+    Pointer,
+    Service,
+    CertificateAuthorityAuthorization,
+    SecureShellFingerprint,
+    TransportLayerSecurityAuthentication,
+    UniformResourceIdentifier,
+    ServiceBinding,
+    HttpsBinding,
+    Location,
 }
 
 #[derive(
@@ -292,7 +302,6 @@ pub enum UnsupportedReason {
 
 #[derive(Archive, RkyvSerialize, RkyvDeserialize, NotaRecord, Debug, Clone, PartialEq, Eq)]
 pub struct RequestUnsupported {
-    pub operation: OperationKind,
     pub provider: Option<Provider>,
     pub capability: Option<Capability>,
     pub reason: UnsupportedReason,
@@ -310,7 +319,6 @@ pub enum RejectionReason {
 
 #[derive(Archive, RkyvSerialize, RkyvDeserialize, NotaRecord, Debug, Clone, PartialEq, Eq)]
 pub struct RequestRejected {
-    pub operation: OperationKind,
     pub reason: RejectionReason,
 }
 
