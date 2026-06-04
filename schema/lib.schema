@@ -46,7 +46,7 @@
   Records RecordQuery
   Redirects RedirectQuery
   ObservePlan PlanQuery
-  ObservationResult [Capabilities Zones Records Redirects PlanResult]
+  ObservationResult [(Capabilities CapabilityReport) (Zones ZoneListing) (Records RecordListing) (Redirects RedirectListing) (PlanResult PlanResult)]
   PlanResult Plan
   FindingSeverity [Notice Warning Error]
   ValidationFinding { FindingSeverity * Message * }

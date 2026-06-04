@@ -240,10 +240,10 @@ pub type ObservePlan = PlanQuery;
 #[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub enum ObservationResult {
-    Capabilities(Capabilities),
-    Zones(Zones),
-    Records(Records),
-    Redirects(Redirects),
+    Capabilities(CapabilityReport),
+    Zones(ZoneListing),
+    Records(RecordListing),
+    Redirects(RedirectListing),
     PlanResult(PlanResult),
 }
 
@@ -501,20 +501,20 @@ impl Observation {
 }
 
 impl ObservationResult {
-    pub fn capabilities(payload: Capabilities) -> Self {
-        Self::Capabilities(payload)
+    pub fn capabilities(payload: Vec<CapabilityObservation>) -> Self {
+        Self::Capabilities(CapabilityReport::new(payload))
     }
 
-    pub fn zones(payload: Zones) -> Self {
-        Self::Zones(payload)
+    pub fn zones(payload: Vec<Zone>) -> Self {
+        Self::Zones(ZoneListing::new(payload))
     }
 
-    pub fn records(payload: Records) -> Self {
-        Self::Records(payload)
+    pub fn records(payload: Vec<DomainNameSystemRecord>) -> Self {
+        Self::Records(RecordListing::new(payload))
     }
 
-    pub fn redirects(payload: Redirects) -> Self {
-        Self::Redirects(payload)
+    pub fn redirects(payload: Vec<RedirectRule>) -> Self {
+        Self::Redirects(RedirectListing::new(payload))
     }
 
     pub fn plan_result(payload: PlanResult) -> Self {
@@ -547,6 +547,30 @@ impl Output {
 
     pub fn request_rejected(payload: RequestRejected) -> Self {
         Self::RequestRejected(payload)
+    }
+}
+
+impl From<CapabilityReport> for ObservationResult {
+    fn from(payload: CapabilityReport) -> Self {
+        Self::Capabilities(payload)
+    }
+}
+
+impl From<ZoneListing> for ObservationResult {
+    fn from(payload: ZoneListing) -> Self {
+        Self::Zones(payload)
+    }
+}
+
+impl From<RecordListing> for ObservationResult {
+    fn from(payload: RecordListing) -> Self {
+        Self::Records(payload)
+    }
+}
+
+impl From<RedirectListing> for ObservationResult {
+    fn from(payload: RedirectListing) -> Self {
+        Self::Redirects(payload)
     }
 }
 
