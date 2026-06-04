@@ -1,0 +1,59 @@
+{}
+[Observe Validate]
+[Observed Validated RequestUnsupported RequestRejected]
+{
+  Observe Observation
+  Validate Validation
+  Observed ObservationResult
+  Validated ValidationReport
+  RequestUnsupported UnsupportedRequest
+  RequestRejected RejectedRequest
+
+  DomainName String
+  RecordValue String
+  UniformResourceLocator String
+  PlanIdentifier String
+  ProviderAccount String
+  ZoneIdentifier String
+  RuleIdentifier String
+  Provider [Cloudflare GoogleCloud Hetzner]
+  Capability [DomainNameSystemRecords RedirectRules CloudHosts Networks Firewalls LoadBalancers]
+  CapabilityState [NotBuilt Compiled Configured Authorized Unsupported Unauthorized]
+  RecordKind [AddressV4 AddressV6 CanonicalName Text MailExchange NameServer Pointer Service CertificateAuthorityAuthorization SecureShellFingerprint TransportLayerSecurityAuthentication UniformResourceIdentifier ServiceBinding HttpsBinding Location]
+  ProxyMode [Direct ProviderProxy]
+  RedirectStatus [Permanent Temporary]
+  PathTreatment [Preserve Replace]
+
+  CapabilityQuery { provider (Optional Provider) capability (Optional Capability) }
+  CapabilityObservation { Provider * Capability * CapabilityState * }
+  CapabilityReport { capabilities (Vec CapabilityObservation) }
+  ZoneQuery { provider (Optional Provider) account (Optional ProviderAccount) }
+  Zone { Provider * ProviderAccount * ZoneIdentifier * DomainName * }
+  ZoneListing { zones (Vec Zone) }
+  DomainNameSystemRecord { DomainName * RecordKind * RecordValue * ProxyMode * }
+  RecordQuery { Provider * DomainName * }
+  RecordListing { records (Vec DomainNameSystemRecord) }
+  RedirectRule { DomainName * UniformResourceLocator * RedirectStatus * PathTreatment * }
+  RedirectQuery { Provider * DomainName * }
+  RedirectListing { rules (Vec RedirectRule) }
+  DesiredState { Provider * DomainName * records (Vec DomainNameSystemRecord) redirects (Vec RedirectRule) }
+  Validation { DesiredState * }
+  Plan { PlanIdentifier * Provider * DomainName * records_to_create (Vec DomainNameSystemRecord) records_to_update (Vec DomainNameSystemRecord) record_names_to_delete (Vec DomainName) redirects_to_create (Vec RedirectRule) redirects_to_update (Vec RedirectRule) redirect_sources_to_delete (Vec DomainName) }
+  PlanQuery { PlanIdentifier * }
+  Observation [Capabilities Zones Records Redirects ObservePlan]
+  Capabilities CapabilityQuery
+  Zones ZoneQuery
+  Records RecordQuery
+  Redirects RedirectQuery
+  ObservePlan PlanQuery
+  ObservationResult [Capabilities Zones Records Redirects PlanResult]
+  PlanResult Plan
+  FindingSeverity [Notice Warning Error]
+  ValidationFinding { FindingSeverity * Message * }
+  Message String
+  ValidationReport { findings (Vec ValidationFinding) }
+  UnsupportedReason [ProviderNotBuilt ProviderNotCompiled ProviderNotConfigured CapabilityNotCompiled CapabilityNotConfigured CapabilityUnauthorized]
+  UnsupportedRequest { provider (Optional Provider) capability (Optional Capability) reason UnsupportedReason }
+  RejectionReason [InvalidDesiredState PlanExpired ProviderRateLimited ProviderUnavailable]
+  RejectedRequest { RejectionReason * }
+}
