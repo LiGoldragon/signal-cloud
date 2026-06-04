@@ -2,7 +2,7 @@
 //!
 //! This crate carries peer-callable provider observation and validation
 //! records. Owner-only credentials, plan preparation, and live mutation live
-//! in `owner-signal-cloud`.
+//! in `meta-signal-cloud`.
 
 use nota_codec::{NotaEnum, NotaRecord, NotaTransparent};
 use rkyv::{Archive, Deserialize as RkyvDeserialize, Serialize as RkyvSerialize};
