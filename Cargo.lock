@@ -315,6 +315,7 @@ name = "signal-cloud"
 version = "0.1.0"
 dependencies = [
  "nota-codec",
+ "nota-next",
  "rkyv",
  "schema-rust-next",
  "signal-frame",
