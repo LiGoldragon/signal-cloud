@@ -40,7 +40,7 @@
   Validation { DesiredState * }
   Plan { PlanIdentifier * Provider * DomainName * records_to_create (Vec DomainNameSystemRecord) records_to_update (Vec DomainNameSystemRecord) record_names_to_delete (Vec DomainName) redirects_to_create (Vec RedirectRule) redirects_to_update (Vec RedirectRule) redirect_sources_to_delete (Vec DomainName) }
   PlanQuery { PlanIdentifier * }
-  Observation [Capabilities Zones Records Redirects ObservePlan]
+  Observation [(Capabilities Capabilities) (Zones Zones) (Records Records) (Redirects Redirects) (ObservePlan ObservePlan)]
   Capabilities CapabilityQuery
   Zones ZoneQuery
   Records RecordQuery
