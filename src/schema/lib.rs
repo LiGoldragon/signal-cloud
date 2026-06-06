@@ -220,11 +220,11 @@ pub struct PlanQuery(pub PlanIdentifier);
 #[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub enum Observation {
-    Capabilities(Capabilities),
-    Zones(Zones),
-    Records(Records),
-    Redirects(Redirects),
-    ObservePlan(ObservePlan),
+    Capabilities,
+    Zones,
+    Records,
+    Redirects,
+    ObservePlan,
 }
 
 pub type Capabilities = CapabilityQuery;
@@ -475,28 +475,6 @@ impl RejectedRequest {
 impl From<RejectionReason> for RejectedRequest {
     fn from(payload: RejectionReason) -> Self {
         Self::new(payload)
-    }
-}
-
-impl Observation {
-    pub fn capabilities(payload: Capabilities) -> Self {
-        Self::Capabilities(payload)
-    }
-
-    pub fn zones(payload: Zones) -> Self {
-        Self::Zones(payload)
-    }
-
-    pub fn records(payload: Records) -> Self {
-        Self::Records(payload)
-    }
-
-    pub fn redirects(payload: Redirects) -> Self {
-        Self::Redirects(payload)
-    }
-
-    pub fn observe_plan(payload: ObservePlan) -> Self {
-        Self::ObservePlan(payload)
     }
 }
 
