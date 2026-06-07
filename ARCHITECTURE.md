@@ -25,14 +25,14 @@ There is no public `Assert`, `Mutate`, `Retract`, `Match`, `Subscribe`, or
 `Validate` Sema root. Sema classification is daemon-local and projected after
 the public operation has been lowered into a component command.
 
-## Ordinary vs owner split
+## Ordinary vs meta split
 
 Per Spirit records 311 and 325 (Maximum certainty, 2026-05-23), the cloud
 surface splits Mutate-class verbs onto `meta-signal-cloud` (privileged) and
 Query-class verbs onto `signal-cloud` (public). Cloudflare and other provider
 states are treated as **external state that the cloud daemon reflects**:
 refresh-by-querying is public; daemon-internal mutations such as preparing
-plans, registering accounts, or applying plans require owner authority.
+plans, registering accounts, or applying plans require meta authority.
 
 This is a workspace generalization: a component whose state surface is a
 reflected external resource exposes its read surface on the ordinary contract
@@ -57,7 +57,7 @@ new shape moves plan preparation to `meta-signal-cloud` as
 
 - Provider credentials.
 - Secret bytes.
-- Owner policy.
+- Meta policy.
 - Live provider mutation.
 - Runtime actors, sockets, databases, or rate-limit state.
 - The Criome domain registry. That belongs to `domain-criome`.
@@ -69,23 +69,23 @@ new shape moves plan preparation to `meta-signal-cloud` as
 - Use typed variants instead of strings for providers and capabilities.
 - Secret values never cross this ordinary contract.
 
-## Pending schema-engine upgrade
+## Schema-emission status
 
-**Status:** scheduled for migration to schema-language-based contract per `reports/designer/326-v13-spirit-complete-schema-vision.md` + `reports/designer/324-migration-mvp-spirit-handover-re-specification.md`.
+**Status:** partial. `schema/lib.schema` is present and `build.rs` runs
+`schema-rust-next`'s `GenerationPlan::wire_contract`, emitting the
+checked-in witness at `src/schema/lib.rs`.
 
-**Target:** this contract's hand-written `signal_channel!` invocation converts
-to this repo's `schema/lib.schema` as the ordinary Signal contract. Daemon
-Nexus and SEMA schemas live in `cloud/schema/` and import this contract through
-Cargo schema metadata.
+The crate's public top-level API still comes from the hand-written
+`src/lib.rs` types and `signal_channel!` invocation. The remaining schema
+cutover is to replace that duplicate hand-written surface with generated
+re-exports from `src/schema/lib.rs`, then update downstream imports and tests.
+Daemon Nexus and SEMA schemas live in `cloud/schema/` and import this contract
+through Cargo schema metadata.
 
-**Sequence:** per `primary-kbmi.1`. Spirit is the MVP pilot landing first via `primary-ezqx.1`; this contract's schema cutover coordinates with cloud daemon implementation.
+Regenerate the checked-in witness with
+`SIGNAL_CLOUD_UPDATE_SCHEMA_ARTIFACTS=1 cargo build --all-features` after
+schema edits. Ordinary builds use the generator's freshness check.
 
 **Per-component concerns:** Per `primary-kbmi.1`. The ordinary cloud contract is
 paired with `meta-signal-cloud`; both contracts stay separate from the cloud
 daemon's Nexus and SEMA runtime schemas.
-
-**References:**
-- `reports/designer/326-v13-spirit-complete-schema-vision.md` — uniform header form + schema-language design
-- `reports/designer/324-migration-mvp-spirit-handover-re-specification.md` — migration MVP + handover state
-- `reports/designer/322-spirit-mvp-positional-schema-worked-example.md` — Spirit MVP worked example
-- `reports/operator/174-schema-import-header-design-critique-2026-05-24.md` — header/body/feature separation + lowering rules

@@ -1,7 +1,7 @@
 //! Ordinary Signal contract for the cloud component.
 //!
 //! This crate carries peer-callable provider observation and validation
-//! records. Owner-only credentials, plan preparation, and live mutation live
+//! records. Meta-policy credentials, plan preparation, and live mutation live
 //! in `meta-signal-cloud`.
 
 use nota_codec::{NotaEnum, NotaRecord, NotaTransparent};

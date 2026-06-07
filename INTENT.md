@@ -9,7 +9,7 @@ Maintenance: `primary/skills/repo-intent.md`.*
 This file carries only the intent that is FOR this `signal-cloud`
 contract. Workspace-shape intent stays in the primary workspace
 `primary/INTENT.md`. Component daemon intent stays in `cloud/INTENT.md`.
-Owner/meta policy intent stays in `meta-signal-cloud/INTENT.md`.
+Meta-policy intent stays in `meta-signal-cloud/INTENT.md`.
 
 ## Why this repo exists
 
@@ -28,7 +28,7 @@ The contract names cloud-provider concepts without binding the domain
 model to any one provider. Cloudflare, Google Cloud, and Hetzner are
 typed provider *variants*, not separate operation roots. A component
 whose state surface is a reflected external resource exposes its read
-surface on the ordinary contract and its mutation surface on the owner
+surface on the ordinary contract and its mutation surface on the meta
 contract; `cloud` is the first worked example (per Spirit records 311
 and 325, Maximum certainty, 2026-05-23).
 
@@ -67,7 +67,7 @@ contract-local operation verbs":
   `PlanQuery`.
 - Refresh-by-querying provider state is public; daemon-internal
   mutations (preparing plans, registering accounts, applying plans)
-  require owner authority and live in `meta-signal-cloud`.
+  require meta authority and live in `meta-signal-cloud`.
 
 ## Constraints
 
@@ -76,16 +76,19 @@ contract-local operation verbs":
 - Depend on `signal-frame`, not deprecated `signal-core`.
 - Every operation and reply variant round-trips through both rkyv frames
   and NOTA text.
-- This contract's hand-written `signal_channel!` invocation is scheduled
-  to convert to this repo's `schema/lib.schema` as the ordinary Signal
-  contract; the daemon's Nexus and SEMA schemas live in `cloud/schema/`
-  and import this contract through Cargo schema metadata.
+- This repo carries a checked-in `schema/lib.schema` and generated
+  `src/schema/lib.rs` witness for the ordinary Signal contract. The
+  public top-level API is still the hand-written `signal_channel!`
+  surface until the dedicated schema cutover replaces the duplicate
+  hand-written types with generated re-exports. The daemon's Nexus and
+  SEMA schemas live in `cloud/schema/` and import this contract through
+  Cargo schema metadata.
 
 ## Non-ownership
 
 This crate does not own:
 
-- provider credentials, secret bytes, owner policy, or live provider
+- provider credentials, secret bytes, meta policy, or live provider
   mutation;
 - `cloud` daemon runtime actors, sockets, databases, or rate-limit
   state;
@@ -96,7 +99,7 @@ This crate does not own:
 - `ARCHITECTURE.md` — detailed channel shape, ordinary/owner split, and
   closed-enum discipline.
 - `../cloud/INTENT.md` — daemon-side intent when it lands.
-- `../meta-signal-cloud/INTENT.md` — owner meta-signal policy contract.
+- `../meta-signal-cloud/INTENT.md` — meta-signal policy contract.
 - `primary/skills/contract-repo.md` — contract repo discipline and
   naming rules.
 - `primary/skills/component-triad.md` — repo triad structure and wire
