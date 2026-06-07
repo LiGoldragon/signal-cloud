@@ -69,14 +69,23 @@ new shape moves plan preparation to `meta-signal-cloud` as
 - Use typed variants instead of strings for providers and capabilities.
 - Secret values never cross this ordinary contract.
 
-## Schema-language status
+## Pending schema-engine upgrade
 
-This contract is schema-authored in `schema/lib.schema` and generated into
-`src/schema/` as a `WireContract`: typed wire vocabulary, frame codecs, NOTA
-codecs, and round-trip witnesses. It emits no daemon runtime, no actors, and no
-SEMA engine.
+**Status:** scheduled for migration to schema-language-based contract per `reports/designer/326-v13-spirit-complete-schema-vision.md` + `reports/designer/324-migration-mvp-spirit-handover-re-specification.md`.
 
-The paired `meta-signal-cloud` contract remains a separate owner-policy wire
-contract. The cloud daemon's Nexus and SEMA runtime schemas live in
-`cloud/schema/` and import this ordinary contract through Cargo schema metadata;
-they do not live in this contract repo.
+**Target:** this contract's hand-written `signal_channel!` invocation converts
+to this repo's `schema/lib.schema` as the ordinary Signal contract. Daemon
+Nexus and SEMA schemas live in `cloud/schema/` and import this contract through
+Cargo schema metadata.
+
+**Sequence:** per `primary-kbmi.1`. Spirit is the MVP pilot landing first via `primary-ezqx.1`; this contract's schema cutover coordinates with cloud daemon implementation.
+
+**Per-component concerns:** Per `primary-kbmi.1`. The ordinary cloud contract is
+paired with `meta-signal-cloud`; both contracts stay separate from the cloud
+daemon's Nexus and SEMA runtime schemas.
+
+**References:**
+- `reports/designer/326-v13-spirit-complete-schema-vision.md` — uniform header form + schema-language design
+- `reports/designer/324-migration-mvp-spirit-handover-re-specification.md` — migration MVP + handover state
+- `reports/designer/322-spirit-mvp-positional-schema-worked-example.md` — Spirit MVP worked example
+- `reports/operator/174-schema-import-header-design-critique-2026-05-24.md` — header/body/feature separation + lowering rules

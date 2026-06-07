@@ -76,10 +76,10 @@ contract-local operation verbs":
 - Depend on `signal-frame`, not deprecated `signal-core`.
 - Every operation and reply variant round-trips through both rkyv frames
   and NOTA text.
-- This contract is authored in `schema/lib.schema` and generated into
-  `src/schema/` as the ordinary Signal wire contract; the daemon's Nexus and
-  SEMA schemas live in `cloud/schema/` and import this contract through Cargo
-  schema metadata.
+- This contract's hand-written `signal_channel!` invocation is scheduled
+  to convert to this repo's `schema/lib.schema` as the ordinary Signal
+  contract; the daemon's Nexus and SEMA schemas live in `cloud/schema/`
+  and import this contract through Cargo schema metadata.
 
 ## Non-ownership
 
