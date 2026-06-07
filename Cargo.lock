@@ -271,8 +271,8 @@ dependencies = [
 
 [[package]]
 name = "schema-rust-next"
-version = "0.1.15"
-source = "git+https://github.com/LiGoldragon/schema-rust-next.git?branch=main#8ae5b59633cfa1570ca0dbb7bc0096a0d3829374"
+version = "0.3.0"
+source = "git+https://github.com/LiGoldragon/schema-rust-next.git?branch=main#a35eff74419d03e36720765e09c9e53fe87a3089"
 dependencies = [
  "prettyplease",
  "proc-macro2",
