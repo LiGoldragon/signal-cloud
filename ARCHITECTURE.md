@@ -36,7 +36,7 @@ plans, registering accounts, or applying plans require meta authority.
 
 This is a workspace generalization: a component whose state surface is a
 reflected external resource exposes its read surface on the ordinary contract
-and its mutation surface on the owner contract. The cloud daemon is the first
+and its mutation surface on the meta contract. The cloud daemon is the first
 worked example.
 
 The previous shape held `Plan(DesiredState)` on this ordinary contract. The

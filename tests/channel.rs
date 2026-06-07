@@ -1,4 +1,4 @@
-use nota_codec::{Decoder, Encoder, NotaDecode, NotaEncode};
+use nota_next::{NotaEncode, NotaSource};
 use signal_cloud::{
     Capability, CapabilityQuery, CapabilityState, DesiredState, DomainName, DomainNameSystemRecord,
     Observation, ObservationResult, Operation, OperationKind, PathTreatment, Plan, PlanIdentifier,
@@ -11,9 +11,7 @@ use signal_frame::{
 };
 
 fn encode_to_text<T: NotaEncode>(value: &T) -> String {
-    let mut encoder = Encoder::new();
-    value.encode(&mut encoder).expect("encode");
-    encoder.into_string()
+    value.to_nota()
 }
 
 fn desired_state() -> DesiredState {
@@ -69,8 +67,7 @@ fn capability_observation_round_trips_through_nota() {
         "(Observe (Capabilities ((Some Cloudflare) (Some RedirectRules))))"
     );
 
-    let mut decoder = Decoder::new(&text);
-    let decoded = Operation::decode(&mut decoder).expect("decode");
+    let decoded = NotaSource::new(&text).parse::<Operation>().expect("decode");
     assert_eq!(decoded, operation);
 }
 
@@ -112,8 +109,7 @@ fn unsupported_provider_reply_round_trips_through_nota() {
     assert_eq!(reply.kind(), ReplyKind::RequestUnsupported);
 
     let text = encode_to_text(&reply);
-    let mut decoder = Decoder::new(&text);
-    let decoded = Reply::decode(&mut decoder).expect("decode");
+    let decoded = NotaSource::new(&text).parse::<Reply>().expect("decode");
     assert_eq!(decoded, reply);
 }
 
@@ -124,8 +120,9 @@ fn not_built_capability_state_round_trips_through_nota() {
     let text = encode_to_text(&state);
     assert_eq!(text, "NotBuilt");
 
-    let mut decoder = Decoder::new(&text);
-    let decoded = CapabilityState::decode(&mut decoder).expect("decode");
+    let decoded = NotaSource::new(&text)
+        .parse::<CapabilityState>()
+        .expect("decode");
     assert_eq!(decoded, state);
 }
 
@@ -144,8 +141,7 @@ fn plan_observation_reply_round_trips_through_nota() {
     }));
 
     let text = encode_to_text(&reply);
-    let mut decoder = Decoder::new(&text);
-    let decoded = Reply::decode(&mut decoder).expect("decode");
+    let decoded = NotaSource::new(&text).parse::<Reply>().expect("decode");
     assert_eq!(decoded, reply);
 }
 

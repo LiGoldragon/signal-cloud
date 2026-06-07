@@ -96,7 +96,7 @@ This crate does not own:
 
 ## See also
 
-- `ARCHITECTURE.md` — detailed channel shape, ordinary/owner split, and
+- `ARCHITECTURE.md` — detailed channel shape, ordinary/meta split, and
   closed-enum discipline.
 - `../cloud/INTENT.md` — daemon-side intent when it lands.
 - `../meta-signal-cloud/INTENT.md` — meta-signal policy contract.
