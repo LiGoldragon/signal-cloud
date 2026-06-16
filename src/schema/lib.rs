@@ -491,18 +491,18 @@ pub struct RejectedRequest(RejectionReason);
 #[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub enum Input {
-    Observe(Observe),
-    Validate(Validate),
+    Observe(Observation),
+    Validate(Validation),
 }
 
 #[rustfmt::skip]
 #[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub enum Output {
-    Observed(Observed),
-    Validated(Validated),
-    RequestUnsupported(RequestUnsupported),
-    RequestRejected(RequestRejected),
+    Observed(ObservationResult),
+    Validated(ValidationReport),
+    RequestUnsupported(UnsupportedRequest),
+    RequestRejected(RejectedRequest),
 }
 
 #[rustfmt::skip]
@@ -637,6 +637,24 @@ impl From<String> for DomainName {
         Self::new(payload)
     }
 }
+#[rustfmt::skip]
+impl std::fmt::Display for DomainName {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for DomainName {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for DomainName {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
+    }
+}
 
 #[rustfmt::skip]
 impl RecordValue {
@@ -654,6 +672,24 @@ impl RecordValue {
 impl From<String> for RecordValue {
     fn from(payload: String) -> Self {
         Self::new(payload)
+    }
+}
+#[rustfmt::skip]
+impl std::fmt::Display for RecordValue {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for RecordValue {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for RecordValue {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
     }
 }
 
@@ -675,6 +711,24 @@ impl From<String> for UniformResourceLocator {
         Self::new(payload)
     }
 }
+#[rustfmt::skip]
+impl std::fmt::Display for UniformResourceLocator {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for UniformResourceLocator {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for UniformResourceLocator {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
+    }
+}
 
 #[rustfmt::skip]
 impl PlanIdentifier {
@@ -692,6 +746,24 @@ impl PlanIdentifier {
 impl From<String> for PlanIdentifier {
     fn from(payload: String) -> Self {
         Self::new(payload)
+    }
+}
+#[rustfmt::skip]
+impl std::fmt::Display for PlanIdentifier {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for PlanIdentifier {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for PlanIdentifier {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
     }
 }
 
@@ -713,6 +785,24 @@ impl From<String> for ProviderAccount {
         Self::new(payload)
     }
 }
+#[rustfmt::skip]
+impl std::fmt::Display for ProviderAccount {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for ProviderAccount {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for ProviderAccount {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
+    }
+}
 
 #[rustfmt::skip]
 impl ZoneIdentifier {
@@ -732,6 +822,24 @@ impl From<String> for ZoneIdentifier {
         Self::new(payload)
     }
 }
+#[rustfmt::skip]
+impl std::fmt::Display for ZoneIdentifier {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for ZoneIdentifier {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for ZoneIdentifier {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
+    }
+}
 
 #[rustfmt::skip]
 impl RuleIdentifier {
@@ -749,6 +857,24 @@ impl RuleIdentifier {
 impl From<String> for RuleIdentifier {
     fn from(payload: String) -> Self {
         Self::new(payload)
+    }
+}
+#[rustfmt::skip]
+impl std::fmt::Display for RuleIdentifier {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for RuleIdentifier {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for RuleIdentifier {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
     }
 }
 
@@ -998,6 +1124,24 @@ impl From<String> for Message {
         Self::new(payload)
     }
 }
+#[rustfmt::skip]
+impl std::fmt::Display for Message {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for Message {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for Message {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
+    }
+}
 
 #[rustfmt::skip]
 impl ValidationReport {
@@ -1078,26 +1222,26 @@ impl ObservationResult {
 #[rustfmt::skip]
 impl Input {
     pub fn observe(payload: Observation) -> Self {
-        Self::Observe(Observe::new(payload))
+        Self::Observe(payload)
     }
-    pub fn validate(payload: Validation) -> Self {
-        Self::Validate(Validate::new(payload))
+    pub fn validate(payload: DesiredState) -> Self {
+        Self::Validate(Validation::new(payload))
     }
 }
 
 #[rustfmt::skip]
 impl Output {
     pub fn observed(payload: ObservationResult) -> Self {
-        Self::Observed(Observed::new(payload))
+        Self::Observed(payload)
     }
-    pub fn validated(payload: ValidationReport) -> Self {
-        Self::Validated(Validated::new(payload))
+    pub fn validated(payload: Vec<ValidationFinding>) -> Self {
+        Self::Validated(ValidationReport::new(payload))
     }
     pub fn request_unsupported(payload: UnsupportedRequest) -> Self {
-        Self::RequestUnsupported(RequestUnsupported::new(payload))
+        Self::RequestUnsupported(payload)
     }
-    pub fn request_rejected(payload: RejectedRequest) -> Self {
-        Self::RequestRejected(RequestRejected::new(payload))
+    pub fn request_rejected(payload: RejectionReason) -> Self {
+        Self::RequestRejected(RejectedRequest::new(payload))
     }
 }
 
@@ -1172,43 +1316,43 @@ impl From<PlanResult> for ObservationResult {
 }
 
 #[rustfmt::skip]
-impl From<Observe> for Input {
-    fn from(payload: Observe) -> Self {
+impl From<Observation> for Input {
+    fn from(payload: Observation) -> Self {
         Self::Observe(payload)
     }
 }
 
 #[rustfmt::skip]
-impl From<Validate> for Input {
-    fn from(payload: Validate) -> Self {
+impl From<Validation> for Input {
+    fn from(payload: Validation) -> Self {
         Self::Validate(payload)
     }
 }
 
 #[rustfmt::skip]
-impl From<Observed> for Output {
-    fn from(payload: Observed) -> Self {
+impl From<ObservationResult> for Output {
+    fn from(payload: ObservationResult) -> Self {
         Self::Observed(payload)
     }
 }
 
 #[rustfmt::skip]
-impl From<Validated> for Output {
-    fn from(payload: Validated) -> Self {
+impl From<ValidationReport> for Output {
+    fn from(payload: ValidationReport) -> Self {
         Self::Validated(payload)
     }
 }
 
 #[rustfmt::skip]
-impl From<RequestUnsupported> for Output {
-    fn from(payload: RequestUnsupported) -> Self {
+impl From<UnsupportedRequest> for Output {
+    fn from(payload: UnsupportedRequest) -> Self {
         Self::RequestUnsupported(payload)
     }
 }
 
 #[rustfmt::skip]
-impl From<RequestRejected> for Output {
-    fn from(payload: RequestRejected) -> Self {
+impl From<RejectedRequest> for Output {
+    fn from(payload: RejectedRequest) -> Self {
         Self::RequestRejected(payload)
     }
 }

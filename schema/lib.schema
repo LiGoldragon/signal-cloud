@@ -1,6 +1,10 @@
 {}
-[Observe Validate]
-[Observed Validated RequestUnsupported RequestRejected]
+[(Observe Observation)
+ (Validate Validation)]
+[(Observed ObservationResult)
+ (Validated ValidationReport)
+ (RequestUnsupported UnsupportedRequest)
+ (RequestRejected RejectedRequest)]
 {
   Observe Observation
   Validate Validation
@@ -25,21 +29,21 @@
   PathTreatment [Preserve Replace]
 
   CapabilityQuery { provider (Optional Provider) capability (Optional Capability) }
-  CapabilityObservation { Provider * Capability * CapabilityState * }
-  CapabilityReport { capabilities (Vec CapabilityObservation) }
+  CapabilityObservation { provider Provider capability Capability capability_state CapabilityState }
+  CapabilityReport { capabilities (Vector CapabilityObservation) }
   ZoneQuery { provider (Optional Provider) account (Optional ProviderAccount) }
-  Zone { Provider * ProviderAccount * ZoneIdentifier * DomainName * }
-  ZoneListing { zones (Vec Zone) }
-  DomainNameSystemRecord { DomainName * RecordKind * RecordValue * ProxyMode * }
-  RecordQuery { Provider * DomainName * }
-  RecordListing { records (Vec DomainNameSystemRecord) }
-  RedirectRule { DomainName * UniformResourceLocator * RedirectStatus * PathTreatment * }
-  RedirectQuery { Provider * DomainName * }
-  RedirectListing { rules (Vec RedirectRule) }
-  DesiredState { Provider * DomainName * records (Vec DomainNameSystemRecord) redirects (Vec RedirectRule) }
-  Validation { DesiredState * }
-  Plan { PlanIdentifier * Provider * DomainName * records_to_create (Vec DomainNameSystemRecord) records_to_update (Vec DomainNameSystemRecord) record_names_to_delete (Vec DomainName) redirects_to_create (Vec RedirectRule) redirects_to_update (Vec RedirectRule) redirect_sources_to_delete (Vec DomainName) }
-  PlanQuery { PlanIdentifier * }
+  Zone { provider Provider provider_account ProviderAccount zone_identifier ZoneIdentifier domain_name DomainName }
+  ZoneListing { zones (Vector Zone) }
+  DomainNameSystemRecord { domain_name DomainName record_kind RecordKind record_value RecordValue proxy_mode ProxyMode }
+  RecordQuery { provider Provider domain_name DomainName }
+  RecordListing { records (Vector DomainNameSystemRecord) }
+  RedirectRule { domain_name DomainName uniform_resource_locator UniformResourceLocator redirect_status RedirectStatus path_treatment PathTreatment }
+  RedirectQuery { provider Provider domain_name DomainName }
+  RedirectListing { rules (Vector RedirectRule) }
+  DesiredState { provider Provider domain_name DomainName records (Vector DomainNameSystemRecord) redirects (Vector RedirectRule) }
+  Validation DesiredState
+  Plan { plan_identifier PlanIdentifier provider Provider domain_name DomainName records_to_create (Vector DomainNameSystemRecord) records_to_update (Vector DomainNameSystemRecord) record_names_to_delete (Vector DomainName) redirects_to_create (Vector RedirectRule) redirects_to_update (Vector RedirectRule) redirect_sources_to_delete (Vector DomainName) }
+  PlanQuery PlanIdentifier
   Observation [(Capabilities Capabilities) (Zones Zones) (Records Records) (Redirects Redirects) (ObservePlan ObservePlan)]
   Capabilities CapabilityQuery
   Zones ZoneQuery
@@ -49,11 +53,11 @@
   ObservationResult [(Capabilities CapabilityReport) (Zones ZoneListing) (Records RecordListing) (Redirects RedirectListing) (PlanResult PlanResult)]
   PlanResult Plan
   FindingSeverity [Notice Warning Error]
-  ValidationFinding { FindingSeverity * Message * }
+  ValidationFinding { finding_severity FindingSeverity message Message }
   Message String
-  ValidationReport { findings (Vec ValidationFinding) }
+  ValidationReport { findings (Vector ValidationFinding) }
   UnsupportedReason [ProviderNotBuilt ProviderNotCompiled ProviderNotConfigured CapabilityNotCompiled CapabilityNotConfigured CapabilityUnauthorized]
   UnsupportedRequest { provider (Optional Provider) capability (Optional Capability) reason UnsupportedReason }
   RejectionReason [InvalidDesiredState PlanExpired ProviderRateLimited ProviderUnavailable]
-  RejectedRequest { RejectionReason * }
+  RejectedRequest RejectionReason
 }
