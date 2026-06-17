@@ -45,6 +45,10 @@ string_newtype!(PlanIdentifier);
 string_newtype!(ProviderAccount);
 string_newtype!(ZoneIdentifier);
 string_newtype!(RuleIdentifier);
+string_newtype!(HostIdentifier);
+string_newtype!(ServerType);
+string_newtype!(ImageName);
+string_newtype!(IpAddress);
 
 #[derive(
     Archive,
@@ -195,6 +199,27 @@ pub enum PathTreatment {
 }
 
 #[derive(
+    Archive,
+    RkyvSerialize,
+    RkyvDeserialize,
+    NotaEncode,
+    NotaDecode,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    Hash,
+)]
+pub enum HostStatus {
+    Initializing,
+    Running,
+    Stopped,
+    Deleting,
+    Unknown,
+}
+
+#[derive(
     Archive, RkyvSerialize, RkyvDeserialize, NotaEncode, NotaDecode, Debug, Clone, PartialEq, Eq,
 )]
 pub struct CapabilityQuery {
@@ -241,6 +266,35 @@ pub struct Zone {
 )]
 pub struct ZoneListing {
     pub zones: Vec<Zone>,
+}
+
+#[derive(
+    Archive, RkyvSerialize, RkyvDeserialize, NotaEncode, NotaDecode, Debug, Clone, PartialEq, Eq,
+)]
+pub struct HostQuery {
+    pub provider: Provider,
+    pub account: Option<ProviderAccount>,
+}
+
+#[derive(
+    Archive, RkyvSerialize, RkyvDeserialize, NotaEncode, NotaDecode, Debug, Clone, PartialEq, Eq,
+)]
+pub struct CloudHost {
+    pub provider: Provider,
+    pub account: ProviderAccount,
+    pub identifier: HostIdentifier,
+    pub name: DomainName,
+    pub server_type: ServerType,
+    pub image: ImageName,
+    pub ipv4: IpAddress,
+    pub status: HostStatus,
+}
+
+#[derive(
+    Archive, RkyvSerialize, RkyvDeserialize, NotaEncode, NotaDecode, Debug, Clone, PartialEq, Eq,
+)]
+pub struct CloudHostListing {
+    pub hosts: Vec<CloudHost>,
 }
 
 #[derive(
@@ -340,6 +394,7 @@ pub enum Observation {
     Zones(ZoneQuery),
     Records(RecordQuery),
     Redirects(RedirectQuery),
+    Servers(HostQuery),
     Plan(PlanQuery),
 }
 
@@ -350,6 +405,7 @@ impl Observation {
             Self::Zones(_) => ObservationKind::Zones,
             Self::Records(_) => ObservationKind::Records,
             Self::Redirects(_) => ObservationKind::Redirects,
+            Self::Servers(_) => ObservationKind::Servers,
             Self::Plan(_) => ObservationKind::Plan,
         }
     }
@@ -373,6 +429,7 @@ pub enum ObservationKind {
     Zones,
     Records,
     Redirects,
+    Servers,
     Plan,
 }
 
@@ -384,6 +441,7 @@ pub enum ObservationResult {
     Zones(ZoneListing),
     Records(RecordListing),
     Redirects(RedirectListing),
+    Servers(CloudHostListing),
     Plan(Plan),
 }
 

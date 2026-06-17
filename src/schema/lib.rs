@@ -80,6 +80,26 @@ pub struct RuleIdentifier(String);
 
 #[rustfmt::skip]
 #[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct HostIdentifier(String);
+
+#[rustfmt::skip]
+#[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct ServerType(String);
+
+#[rustfmt::skip]
+#[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct ImageName(String);
+
+#[rustfmt::skip]
+#[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct IpAddress(String);
+
+#[rustfmt::skip]
+#[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
 #[derive(
     rkyv::Archive,
     rkyv::Serialize,
@@ -221,6 +241,26 @@ pub enum PathTreatment {
 
 #[rustfmt::skip]
 #[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
+#[derive(
+    rkyv::Archive,
+    rkyv::Serialize,
+    rkyv::Deserialize,
+    Clone,
+    Copy,
+    Debug,
+    PartialEq,
+    Eq,
+)]
+pub enum HostStatus {
+    Initializing,
+    Running,
+    Stopped,
+    Deleting,
+    Unknown,
+}
+
+#[rustfmt::skip]
+#[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub struct CapabilityQuery {
     pub provider: Option<Provider>,
@@ -263,6 +303,33 @@ pub struct Zone {
 #[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub struct ZoneListing(Vec<Zone>);
+
+#[rustfmt::skip]
+#[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct HostQuery {
+    pub provider: Provider,
+    pub provider_account: Option<ProviderAccount>,
+}
+
+#[rustfmt::skip]
+#[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct CloudHost {
+    pub provider: Provider,
+    pub provider_account: ProviderAccount,
+    pub host_identifier: HostIdentifier,
+    pub host_name: DomainName,
+    pub server_type: ServerType,
+    pub image_name: ImageName,
+    pub ipv4_address: IpAddress,
+    pub host_status: HostStatus,
+}
+
+#[rustfmt::skip]
+#[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct CloudHostListing(Vec<CloudHost>);
 
 #[rustfmt::skip]
 #[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
@@ -353,6 +420,7 @@ pub enum Observation {
     Zones(Zones),
     Records(Records),
     Redirects(Redirects),
+    ObserveServers(ObserveServers),
     ObservePlan(ObservePlan),
 }
 
@@ -379,6 +447,11 @@ pub struct Redirects(RedirectQuery);
 #[rustfmt::skip]
 #[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
 #[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
+pub struct ObserveServers(HostQuery);
+
+#[rustfmt::skip]
+#[cfg_attr(feature = "nota-text", derive(nota_next::NotaDecode, nota_next::NotaEncode))]
+#[derive(rkyv::Archive, rkyv::Serialize, rkyv::Deserialize, Clone, Debug, PartialEq, Eq)]
 pub struct ObservePlan(PlanQuery);
 
 #[rustfmt::skip]
@@ -389,6 +462,7 @@ pub enum ObservationResult {
     Zones(ZoneListing),
     Records(RecordListing),
     Redirects(RedirectListing),
+    Servers(CloudHostListing),
     PlanResult(PlanResult),
 }
 
@@ -879,6 +953,154 @@ impl PartialEq<&str> for RuleIdentifier {
 }
 
 #[rustfmt::skip]
+impl HostIdentifier {
+    pub fn new(payload: impl Into<String>) -> Self {
+        Self(payload.into())
+    }
+    pub fn payload(&self) -> &String {
+        &self.0
+    }
+    pub fn into_payload(self) -> String {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<String> for HostIdentifier {
+    fn from(payload: String) -> Self {
+        Self::new(payload)
+    }
+}
+#[rustfmt::skip]
+impl std::fmt::Display for HostIdentifier {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for HostIdentifier {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for HostIdentifier {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
+    }
+}
+
+#[rustfmt::skip]
+impl ServerType {
+    pub fn new(payload: impl Into<String>) -> Self {
+        Self(payload.into())
+    }
+    pub fn payload(&self) -> &String {
+        &self.0
+    }
+    pub fn into_payload(self) -> String {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<String> for ServerType {
+    fn from(payload: String) -> Self {
+        Self::new(payload)
+    }
+}
+#[rustfmt::skip]
+impl std::fmt::Display for ServerType {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for ServerType {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for ServerType {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
+    }
+}
+
+#[rustfmt::skip]
+impl ImageName {
+    pub fn new(payload: impl Into<String>) -> Self {
+        Self(payload.into())
+    }
+    pub fn payload(&self) -> &String {
+        &self.0
+    }
+    pub fn into_payload(self) -> String {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<String> for ImageName {
+    fn from(payload: String) -> Self {
+        Self::new(payload)
+    }
+}
+#[rustfmt::skip]
+impl std::fmt::Display for ImageName {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for ImageName {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for ImageName {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
+    }
+}
+
+#[rustfmt::skip]
+impl IpAddress {
+    pub fn new(payload: impl Into<String>) -> Self {
+        Self(payload.into())
+    }
+    pub fn payload(&self) -> &String {
+        &self.0
+    }
+    pub fn into_payload(self) -> String {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<String> for IpAddress {
+    fn from(payload: String) -> Self {
+        Self::new(payload)
+    }
+}
+#[rustfmt::skip]
+impl std::fmt::Display for IpAddress {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        self.payload().fmt(formatter)
+    }
+}
+#[rustfmt::skip]
+impl AsRef<str> for IpAddress {
+    fn as_ref(&self) -> &str {
+        self.payload().as_str()
+    }
+}
+#[rustfmt::skip]
+impl PartialEq<&str> for IpAddress {
+    fn eq(&self, other: &&str) -> bool {
+        self.payload() == other
+    }
+}
+
+#[rustfmt::skip]
 impl CapabilityReport {
     pub fn new(payload: Vec<CapabilityObservation>) -> Self {
         Self(payload)
@@ -912,6 +1134,25 @@ impl ZoneListing {
 #[rustfmt::skip]
 impl From<Vec<Zone>> for ZoneListing {
     fn from(payload: Vec<Zone>) -> Self {
+        Self::new(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl CloudHostListing {
+    pub fn new(payload: Vec<CloudHost>) -> Self {
+        Self(payload)
+    }
+    pub fn payload(&self) -> &Vec<CloudHost> {
+        &self.0
+    }
+    pub fn into_payload(self) -> Vec<CloudHost> {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<Vec<CloudHost>> for CloudHostListing {
+    fn from(payload: Vec<CloudHost>) -> Self {
         Self::new(payload)
     }
 }
@@ -1069,6 +1310,25 @@ impl From<RedirectQuery> for Redirects {
 }
 
 #[rustfmt::skip]
+impl ObserveServers {
+    pub fn new(payload: HostQuery) -> Self {
+        Self(payload)
+    }
+    pub fn payload(&self) -> &HostQuery {
+        &self.0
+    }
+    pub fn into_payload(self) -> HostQuery {
+        self.0
+    }
+}
+#[rustfmt::skip]
+impl From<HostQuery> for ObserveServers {
+    fn from(payload: HostQuery) -> Self {
+        Self::new(payload)
+    }
+}
+
+#[rustfmt::skip]
 impl ObservePlan {
     pub fn new(payload: PlanQuery) -> Self {
         Self(payload)
@@ -1195,6 +1455,9 @@ impl Observation {
     pub fn redirects(payload: RedirectQuery) -> Self {
         Self::Redirects(Redirects::new(payload))
     }
+    pub fn observe_servers(payload: HostQuery) -> Self {
+        Self::ObserveServers(ObserveServers::new(payload))
+    }
     pub fn observe_plan(payload: PlanQuery) -> Self {
         Self::ObservePlan(ObservePlan::new(payload))
     }
@@ -1213,6 +1476,9 @@ impl ObservationResult {
     }
     pub fn redirects(payload: Vec<RedirectRule>) -> Self {
         Self::Redirects(RedirectListing::new(payload))
+    }
+    pub fn servers(payload: Vec<CloudHost>) -> Self {
+        Self::Servers(CloudHostListing::new(payload))
     }
     pub fn plan_result(payload: Plan) -> Self {
         Self::PlanResult(PlanResult::new(payload))
@@ -1274,6 +1540,13 @@ impl From<Redirects> for Observation {
 }
 
 #[rustfmt::skip]
+impl From<ObserveServers> for Observation {
+    fn from(payload: ObserveServers) -> Self {
+        Self::ObserveServers(payload)
+    }
+}
+
+#[rustfmt::skip]
 impl From<ObservePlan> for Observation {
     fn from(payload: ObservePlan) -> Self {
         Self::ObservePlan(payload)
@@ -1305,6 +1578,13 @@ impl From<RecordListing> for ObservationResult {
 impl From<RedirectListing> for ObservationResult {
     fn from(payload: RedirectListing) -> Self {
         Self::Redirects(payload)
+    }
+}
+
+#[rustfmt::skip]
+impl From<CloudHostListing> for ObservationResult {
+    fn from(payload: CloudHostListing) -> Self {
+        Self::Servers(payload)
     }
 }
 
