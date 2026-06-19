@@ -67,6 +67,7 @@ pub enum Provider {
     Cloudflare,
     GoogleCloud,
     Hetzner,
+    DigitalOcean,
 }
 
 #[derive(

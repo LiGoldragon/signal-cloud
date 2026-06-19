@@ -114,6 +114,7 @@ pub enum Provider {
     Cloudflare,
     GoogleCloud,
     Hetzner,
+    DigitalOcean,
 }
 
 #[rustfmt::skip]

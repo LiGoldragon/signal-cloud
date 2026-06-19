@@ -24,7 +24,7 @@
   ServerType String
   ImageName String
   IpAddress String
-  Provider [Cloudflare GoogleCloud Hetzner]
+  Provider [Cloudflare GoogleCloud Hetzner DigitalOcean]
   Capability [DomainNameSystemRecords RedirectRules CloudHosts Networks Firewalls LoadBalancers]
   CapabilityState [NotBuilt Compiled Configured Authorized Unsupported Unauthorized]
   RecordKind [AddressV4 AddressV6 CanonicalName Text MailExchange NameServer Pointer Service CertificateAuthorityAuthorization SecureShellFingerprint TransportLayerSecurityAuthentication UniformResourceIdentifier ServiceBinding HttpsBinding Location]
