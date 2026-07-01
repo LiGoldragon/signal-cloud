@@ -4,6 +4,12 @@
 It lets peers observe provider capabilities and state, validate desired
 provider-neutral cloud state, and observe daemon-held plans.
 
+## Direction
+
+`signal-cloud` is the **ordinary peer-callable wire contract** for the `cloud` component. It carries the read-and-validate surface: peers observe provider capabilities, zones, records, redirects, and daemon-held plans, and validate desired provider-neutral state without preparing or applying any mutation. Plan preparation and plan application — which write daemon plan state and mutate external provider accounts — live in `meta-signal-cloud`.
+
+The contract names cloud-provider concepts without binding the domain model to any one provider. Cloudflare, Google Cloud, and Hetzner are provider variants, not separate operation roots. This is a workspace generalization: a component whose state surface is a reflected external resource exposes its read surface on the ordinary contract and its mutation surface on the meta contract. The `cloud` daemon is the first worked example, per Spirit records 311 and 325 (Maximum certainty, 2026-05-23).
+
 ## Boundary
 
 The contract names cloud-provider concepts without binding the domain model
