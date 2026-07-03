@@ -1,4 +1,4 @@
-use nota_next::{NotaEncode, NotaSource};
+use nota::{NotaEncode, NotaSource};
 use signal_cloud::{
     Capability, CapabilityQuery, CapabilityState, DesiredState, DomainName, DomainNameSystemRecord,
     Observation, ObservationResult, Operation, OperationKind, PathTreatment, Plan, PlanIdentifier,

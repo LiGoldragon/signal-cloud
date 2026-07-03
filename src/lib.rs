@@ -4,7 +4,7 @@
 //! records. Meta-policy credentials, plan preparation, and live mutation live
 //! in `meta-signal-cloud`.
 
-use nota_next::{NotaDecode, NotaEncode};
+use nota::{NotaDecode, NotaEncode};
 use rkyv::{Archive, Deserialize as RkyvDeserialize, Serialize as RkyvSerialize};
 use signal_frame::signal_channel;
 
