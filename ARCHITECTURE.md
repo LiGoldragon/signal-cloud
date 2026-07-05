@@ -78,7 +78,7 @@ new shape moves plan preparation to `meta-signal-cloud` as
 ## Schema-emission status
 
 **Status:** partial. `schema/lib.schema` is present and `build.rs` runs
-`schema-rust-next`'s `GenerationPlan::wire_contract`, emitting the
+`schema-rust`'s `GenerationPlan::wire_contract`, emitting the
 checked-in witness at `src/schema/lib.rs`.
 
 The crate's public top-level API still comes from the hand-written
