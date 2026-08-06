@@ -1,0 +1,8 @@
+Interface.{1 0 0}
+[]
+{
+  []
+  []
+  []
+  [CapabilityState.[Unauthorized Configured Compiled Authorized NotBuilt Unsupported] CapabilityObservation.{Provider Capability CapabilityState} Provider.[DigitalOcean Cloudflare GoogleCloud Hetzner] Capability.[Firewalls CloudHosts LoadBalancers Networks DomainNameSystemRecords RedirectRules] CapabilityQuery.{Option<Provider> Option<Capability>} CapabilityReport.Vector<CapabilityObservation>]
+}

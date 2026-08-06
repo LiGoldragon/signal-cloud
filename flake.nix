@@ -32,8 +32,8 @@
           "rust-src"
         ];
         craneLib = (crane.mkLib pkgs).overrideToolchain toolchain;
-        schemaFilter = path: type: type == "regular" && pkgs.lib.hasSuffix ".schema" path;
-        sourceFilter = path: type: (craneLib.filterCargoSources path type) || (schemaFilter path type);
+        ethosFilter = path: type: type == "regular" && pkgs.lib.hasSuffix ".ethos" path;
+        sourceFilter = path: type: (craneLib.filterCargoSources path type) || (ethosFilter path type);
         src = pkgs.lib.cleanSourceWith {
           src = ./.;
           filter = sourceFilter;

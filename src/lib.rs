@@ -8,7 +8,14 @@ use nota::{NotaDecode, NotaEncode};
 use rkyv::{Archive, Deserialize as RkyvDeserialize, Serialize as RkyvSerialize};
 use signal_frame::signal_channel;
 
+pub mod bootstrap_manifest;
 pub mod schema;
+
+/// Canonical textual projection of the role-free capability Interface stage.
+pub const CAPABILITY_INTERFACE_SOURCE: &str = include_str!("../schema/capability.ethos");
+
+/// Checked structural Rust projection of the verified capability Interface.
+pub const CAPABILITY_INTERFACE_RUST: &str = include_str!("schema/capability/generated.rs");
 
 macro_rules! string_newtype {
     ($name:ident) => {

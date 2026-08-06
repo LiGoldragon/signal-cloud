@@ -1,8 +1,8 @@
 [package]
 name         = "signal-cloud"
-version      = "0.1.0"
+version      = "0.2.0"
 edition      = "2024"
-rust-version = "1.88"
+rust-version = "1.89"
 license      = "MIT OR Apache-2.0"
 description  = "Ordinary Signal contract for the cloud provider API component."
 publish      = false
@@ -28,7 +28,13 @@ rkyv         = { version = "0.8", default-features = false, features = ["std", "
 signal-frame = { git = "https://github.com/LiGoldragon/signal-frame.git", branch = "main" }
 
 [build-dependencies]
-schema-rust = { git = "https://github.com/LiGoldragon/schema-rust.git", branch = "main" }
+core-ethos = { git = "https://github.com/LiGoldragon/core-ethos.git", rev = "427fd74a8217f557cfabdfe0ff23b784c855bf85" }
+name-table = { git = "https://github.com/LiGoldragon/name-table.git", rev = "a22f48d8040ab9235f3552ad8654ff8e27b8157d" }
+rust-logos = { git = "https://github.com/LiGoldragon/rust-logos.git", rev = "55501fddc2d7e154d71fff1659386cbbba712267" }
+schema-rust = { git = "https://github.com/LiGoldragon/schema-rust.git", rev = "34b912a7703f4f9419ceff539aa3804513d1ef28" }
+sema-translator = { git = "https://github.com/LiGoldragon/sema-translator.git", rev = "6b5499c0d25c801b56582fdcd8e021c3293a6d4d", default-features = false, features = ["bootstrap"] }
+signal-sema-translator = { git = "https://github.com/LiGoldragon/signal-sema-translator.git", rev = "3a26cb43f8ce7f9fe85da64d19aa55aa662943ce" }
+structural-codec = { git = "https://github.com/LiGoldragon/structural-codec.git", rev = "879d76f91facedd6d5cbca79e282260e1beb9478" }
 
 [lints.rust]
 unsafe_code = "forbid"

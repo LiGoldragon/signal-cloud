@@ -75,22 +75,24 @@ new shape moves plan preparation to `meta-signal-cloud` as
 - Use typed variants instead of strings for providers and capabilities.
 - Secret values never cross this ordinary contract.
 
-## Schema-emission status
+## Bootstrap stage
 
-**Status:** partial. `schema/lib.schema` is present and `build.rs` runs
-`schema-rust`'s `GenerationPlan::wire_contract`, emitting the
-checked-in witness at `src/schema/lib.rs`.
+`schema/capability.ethos` is an authority-sealed `Interface.{1 0 0}` source.
+Core Nomos revalidates its exact transaction and lowers it to Whole Logos;
+Rust Logos alone projects `src/schema/capability/generated.rs`. The manifest
+contains opaque identity and canonical-order seats, while the build supplies
+every Rust container path explicitly.
 
-The crate's public top-level API still comes from the hand-written
-`src/lib.rs` types and `signal_channel!` invocation. The remaining schema
-cutover is to replace that duplicate hand-written surface with generated
-re-exports from `src/schema/lib.rs`, then update downstream imports and tests.
-Daemon Nexus and SEMA schemas live in `cloud/schema/` and import this contract
-through Cargo schema metadata.
+The current bootstrap refuses nonempty Input, Output, and Refusal roles. The
+document therefore tells the truth about this stage: all three role slots are
+empty, and only the provider capability types covered today appear in Types.
+The public Signal operations, frame behavior, archival derives, and named
+record behavior remain handwritten Rust until later Protos stages represent
+that behavior. They are not claimed as generated.
 
-Regenerate the checked-in witness with
-`SIGNAL_CLOUD_UPDATE_SCHEMA_ARTIFACTS=1 cargo build --all-features` after
-schema edits. Ordinary builds use the generator's freshness check.
+Set `SIGNAL_CLOUD_UPDATE_INTERFACE_ARTIFACTS=1` to update the canonical Ethos
+and Rust projections together. Ordinary builds require both checked artifacts
+to be exact.
 
 **Per-component concerns:** Per `primary-kbmi.1`. The ordinary cloud contract is
 paired with `meta-signal-cloud`; both contracts stay separate from the cloud
