@@ -18,9 +18,11 @@ fn build_uses_one_exact_verified_bootstrap_boundary() {
     let manifest = include_str!("../Cargo.toml");
     let build = include_str!("../build.rs");
 
-    assert!(manifest.contains("34b912a7703f4f9419ceff539aa3804513d1ef28"));
+    assert!(manifest.contains("9e36587c85bd69357e9042729ba2df0052799756"));
     assert_eq!(manifest.matches("schema-rust =").count(), 1);
     assert_eq!(build.matches("BootstrapInterfaceGeneration").count(), 2);
     assert!(build.contains("BootstrapTransactionAssembler"));
     assert!(build.contains("RustTypePath::try_new"));
+    assert!(build.contains("CargoEthosSourceMetadata"));
+    assert!(build.contains("publish_owned_source_directory"));
 }

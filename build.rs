@@ -10,7 +10,7 @@ use name_table::{LocalEncodedId, Name};
 use rust_logos::{
     FixtureRustVocabulary, FixtureRustVocabularyIds, RustLogos, RustTypePath, RustTypePathResolver,
 };
-use schema_rust::{bootstrap::BootstrapInterfaceGeneration, build::CargoSchemaMetadata};
+use schema_rust::{bootstrap::BootstrapInterfaceGeneration, build::CargoEthosSourceMetadata};
 use sema_translator::bootstrap::{
     AuthorizedBootstrapTransition, BootstrapAuthorityIdentity, BootstrapAuthorityRevision,
     BootstrapTransactionAssembler,
@@ -55,7 +55,8 @@ fn main() {
         .expect("project capability Interface from the verified transaction")
         .write_or_check("SIGNAL_CLOUD_UPDATE_INTERFACE_ARTIFACTS")
         .expect("checked capability Interface projections are fresh");
-    CargoSchemaMetadata::new("signal-cloud").emit_schema_directory(&crate_root);
+    CargoEthosSourceMetadata::new("signal-cloud")
+        .publish_owned_source_directory(crate_root.join("schema"));
 }
 
 fn universal(local: u16) -> VocabularyEncodedId {
