@@ -1,6 +1,6 @@
 [package]
 name         = "signal-cloud"
-version      = "0.2.0"
+version      = "0.3.0"
 edition      = "2024"
 rust-version = "1.89"
 license      = "MIT OR Apache-2.0"
@@ -20,6 +20,11 @@ nota-text = []
 [[test]]
 name = "channel"
 path = "tests/channel.rs"
+required-features = ["nota-text"]
+
+[[test]]
+name = "record_data"
+path = "tests/record_data.rs"
 required-features = ["nota-text"]
 
 [dependencies]

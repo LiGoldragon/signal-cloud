@@ -45,8 +45,45 @@ macro_rules! string_newtype {
     };
 }
 
+macro_rules! integer_newtype {
+    ($name:ident) => {
+        #[derive(
+            Archive,
+            RkyvSerialize,
+            RkyvDeserialize,
+            NotaEncode,
+            NotaDecode,
+            Debug,
+            Clone,
+            Copy,
+            PartialEq,
+            Eq,
+            Hash,
+        )]
+        pub struct $name(i64);
+
+        impl $name {
+            pub fn new(value: i64) -> Self {
+                Self(value)
+            }
+
+            pub fn value(self) -> i64 {
+                self.0
+            }
+        }
+    };
+}
+
 string_newtype!(DomainName);
 string_newtype!(RecordValue);
+string_newtype!(RecordTarget);
+string_newtype!(IpV4Address);
+string_newtype!(IpV6Address);
+string_newtype!(TextValue);
+integer_newtype!(Priority);
+integer_newtype!(Weight);
+integer_newtype!(Port);
+integer_newtype!(Seconds);
 string_newtype!(UniformResourceLocator);
 string_newtype!(PlanIdentifier);
 string_newtype!(ProviderAccount);
@@ -308,11 +345,147 @@ pub struct CloudHostListing {
 #[derive(
     Archive, RkyvSerialize, RkyvDeserialize, NotaEncode, NotaDecode, Debug, Clone, PartialEq, Eq,
 )]
+pub struct ServiceRecord {
+    pub priority: Priority,
+    pub weight: Weight,
+    pub port: Port,
+    pub record_target: RecordTarget,
+}
+
+#[derive(
+    Archive, RkyvSerialize, RkyvDeserialize, NotaEncode, NotaDecode, Debug, Clone, PartialEq, Eq,
+)]
+pub struct MailExchangeRecord {
+    pub priority: Priority,
+    pub record_target: RecordTarget,
+}
+
+/// The typed payload of one DNS record.
+///
+/// The vocabulary is closed: one variant per `RecordKind`, so a record kind
+/// and its payload cannot disagree. Kinds whose wire form this contract does
+/// not yet decompose carry `TextValue`, the presentation form the provider
+/// itself accepts; that is a payload type, not a catch-all variant.
+#[derive(
+    Archive, RkyvSerialize, RkyvDeserialize, NotaEncode, NotaDecode, Debug, Clone, PartialEq, Eq,
+)]
+pub enum RecordData {
+    AddressV4(IpV4Address),
+    AddressV6(IpV6Address),
+    CanonicalName(RecordTarget),
+    Text(TextValue),
+    MailExchange(MailExchangeRecord),
+    NameServer(RecordTarget),
+    Pointer(RecordTarget),
+    Service(ServiceRecord),
+    CertificateAuthorityAuthorization(TextValue),
+    SecureShellFingerprint(TextValue),
+    TransportLayerSecurityAuthentication(TextValue),
+    UniformResourceIdentifier(TextValue),
+    ServiceBinding(TextValue),
+    HttpsBinding(TextValue),
+    Location(TextValue),
+}
+
+impl RecordData {
+    /// The record kind this payload is, by construction.
+    pub fn kind(&self) -> RecordKind {
+        match self {
+            Self::AddressV4(_) => RecordKind::AddressV4,
+            Self::AddressV6(_) => RecordKind::AddressV6,
+            Self::CanonicalName(_) => RecordKind::CanonicalName,
+            Self::Text(_) => RecordKind::Text,
+            Self::MailExchange(_) => RecordKind::MailExchange,
+            Self::NameServer(_) => RecordKind::NameServer,
+            Self::Pointer(_) => RecordKind::Pointer,
+            Self::Service(_) => RecordKind::Service,
+            Self::CertificateAuthorityAuthorization(_) => {
+                RecordKind::CertificateAuthorityAuthorization
+            }
+            Self::SecureShellFingerprint(_) => RecordKind::SecureShellFingerprint,
+            Self::TransportLayerSecurityAuthentication(_) => {
+                RecordKind::TransportLayerSecurityAuthentication
+            }
+            Self::UniformResourceIdentifier(_) => RecordKind::UniformResourceIdentifier,
+            Self::ServiceBinding(_) => RecordKind::ServiceBinding,
+            Self::HttpsBinding(_) => RecordKind::HttpsBinding,
+            Self::Location(_) => RecordKind::Location,
+        }
+    }
+
+    /// The single-line presentation form a provider's `content` field carries.
+    ///
+    /// For `Service` and `MailExchange` this is the RFC presentation form.
+    /// Providers that model those structurally take the structured payload
+    /// instead; this remains the form every other kind travels in.
+    pub fn presentation(&self) -> RecordValue {
+        match self {
+            Self::AddressV4(address) => RecordValue::new(address.as_str()),
+            Self::AddressV6(address) => RecordValue::new(address.as_str()),
+            Self::CanonicalName(target) | Self::NameServer(target) | Self::Pointer(target) => {
+                RecordValue::new(target.as_str())
+            }
+            Self::Text(text)
+            | Self::CertificateAuthorityAuthorization(text)
+            | Self::SecureShellFingerprint(text)
+            | Self::TransportLayerSecurityAuthentication(text)
+            | Self::UniformResourceIdentifier(text)
+            | Self::ServiceBinding(text)
+            | Self::HttpsBinding(text)
+            | Self::Location(text) => RecordValue::new(text.as_str()),
+            Self::MailExchange(record) => RecordValue::new(format!(
+                "{} {}",
+                record.priority.value(),
+                record.record_target.as_str()
+            )),
+            Self::Service(record) => RecordValue::new(format!(
+                "{} {} {} {}",
+                record.priority.value(),
+                record.weight.value(),
+                record.port.value(),
+                record.record_target.as_str()
+            )),
+        }
+    }
+}
+
+/// How long a resolver may cache one record.
+///
+/// `ProviderAutomatic` asks the provider for its own default; `Fixed` names
+/// the seconds. It replaces a hard-wired provider constant.
+#[derive(
+    Archive,
+    RkyvSerialize,
+    RkyvDeserialize,
+    NotaEncode,
+    NotaDecode,
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    Hash,
+)]
+pub enum TimeToLive {
+    ProviderAutomatic,
+    Fixed(Seconds),
+}
+
+#[derive(
+    Archive, RkyvSerialize, RkyvDeserialize, NotaEncode, NotaDecode, Debug, Clone, PartialEq, Eq,
+)]
 pub struct DomainNameSystemRecord {
     pub name: DomainName,
-    pub kind: RecordKind,
-    pub value: RecordValue,
+    pub data: RecordData,
     pub proxy_mode: ProxyMode,
+    pub time_to_live: TimeToLive,
+}
+
+impl DomainNameSystemRecord {
+    /// The kind this record is, derived from its payload.
+    pub fn kind(&self) -> RecordKind {
+        self.data.kind()
+    }
 }
 
 #[derive(

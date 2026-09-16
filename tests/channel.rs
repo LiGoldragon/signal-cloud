@@ -1,9 +1,9 @@
 use nota::{NotaEncode, NotaSource};
 use signal_cloud::{
     Capability, CapabilityQuery, CapabilityState, DesiredState, DomainName, DomainNameSystemRecord,
-    Observation, ObservationResult, Operation, OperationKind, PathTreatment, Plan, PlanIdentifier,
-    Provider, RecordKind, RecordValue, RedirectRule, RedirectStatus, Reply, ReplyKind,
-    RequestUnsupported, UniformResourceLocator, UnsupportedReason, Validation,
+    IpV4Address, Observation, ObservationResult, Operation, OperationKind, PathTreatment, Plan,
+    PlanIdentifier, Provider, RecordData, RedirectRule, RedirectStatus, Reply, ReplyKind,
+    RequestUnsupported, TimeToLive, UniformResourceLocator, UnsupportedReason, Validation,
 };
 use signal_frame::{
     ExchangeFrame, ExchangeFrameBody, ExchangeIdentifier, ExchangeLane, LaneSequence,
@@ -20,9 +20,9 @@ fn desired_state() -> DesiredState {
         zone: DomainName::new("goldragon.criome"),
         records: vec![DomainNameSystemRecord {
             name: DomainName::new("goldragon.criome"),
-            kind: RecordKind::AddressV4,
-            value: RecordValue::new("203.0.113.10"),
+            data: RecordData::AddressV4(IpV4Address::new("203.0.113.10")),
             proxy_mode: signal_cloud::ProxyMode::ProviderProxy,
+            time_to_live: TimeToLive::ProviderAutomatic,
         }],
         redirects: vec![RedirectRule {
             source: DomainName::new("goldragon.criome"),
