@@ -42,7 +42,7 @@ fn exchange() -> ExchangeIdentifier {
 }
 
 #[test]
-fn operations_are_contract_local_without_sema_roots() {
+fn operations_are_contract_local_without_memory_roots() {
     let operation = Operation::Validate(Validation {
         desired_state: desired_state(),
     });

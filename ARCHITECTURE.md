@@ -28,7 +28,7 @@ belong to `meta-signal-cloud` until Criome-mediated authorization is in place.
   preparing or applying a mutation.
 
 There is no public `Assert`, `Mutate`, `Retract`, `Match`, `Subscribe`, or
-`Validate` Sema root. Sema classification is daemon-local and projected after
+`Validate` Memory root. Memory classification is daemon-local and projected after
 the public operation has been lowered into a component command.
 
 ## Ordinary vs meta split
@@ -96,4 +96,4 @@ to be exact.
 
 **Per-component concerns:** Per `primary-kbmi.1`. The ordinary cloud contract is
 paired with `meta-signal-cloud`; both contracts stay separate from the cloud
-daemon's Nexus and SEMA runtime schemas.
+daemon's Nexus and MEMORY runtime schemas.

@@ -55,7 +55,7 @@ pub const GRAMMAR_SYNTAX_LOCAL: u16 = 36990;
 pub const INTERFACE_SEAT: AuthoritySeat =
     AuthoritySeat::new("Interface", 19572, 0x643ac7ddaee60480);
 pub const NEXUS_SEAT: AuthoritySeat = AuthoritySeat::new("Nexus", 17804, 0x78cc3576603db1fe);
-pub const SEMA_SEAT: AuthoritySeat = AuthoritySeat::new("Sema", 34297, 0x415c054e0d5bcf60);
+pub const MEMORY_SEAT: AuthoritySeat = AuthoritySeat::new("Memory", 34297, 0x415c054e0d5bcf60);
 pub const INPUT_SEAT: AuthoritySeat = AuthoritySeat::new("Input", 22647, 0x203f476f808f901d);
 pub const OUTPUT_SEAT: AuthoritySeat = AuthoritySeat::new("Output", 3734, 0x85983599620a5927);
 pub const REFUSAL_SEAT: AuthoritySeat = AuthoritySeat::new("Refusal", 18397, 0xe329e0aede92df92);
